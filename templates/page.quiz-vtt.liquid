@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Quel 4-roues pour votre enfant ?</title>
+
+    <style>
+      /* --- Styles Généraux --- */
+      :root {
+          --primary-500: #FF2800; /* Ferrari Red */
+          --primary-600: #D40000; /* Darker Ferrari Red */
+          --green-500: #22c55e;
+          --green-600: #16a34a;
+          --gray-100: #f3f4f6;
+          --gray-200: #e5e7eb;
+          --gray-300: #d1d5db;
+          --gray-400: #9ca3af;
+          --gray-600: #4b5563;
+          --gray-700: #374151;
+          --gray-800: #1f2937;
+          --gray-900: #11182c;
+          --white: #ffffff;
+          --gold: #ffd700;
+          --silver: #c0c0c0;
+          --bronze: #cd7f32;
+      }
+
+
+      /* --- Conteneur Principal du Quiz --- */
+      .quiz-container {
+          background-color: var(--white);
+          width: 100%;
+          max-width: 56rem; /* Largeur augmentée pour le podium */
+          margin: auto;
+          border-radius: 1rem;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          transition: opacity 0.5s ease-in-out;
+      }
+
+      /* --- Barre de Progression --- */
+      .progress-bar-container {
+          width: 100%;
+          background-color: var(--gray-200);
+          border-radius: 9999px;
+          height: 0.625rem;
+          margin-bottom: 1.5rem;
+      }
+
+      .progress-bar {
+          background-color: var(--primary-500);
+          height: 100%;
+          border-radius: 9999px;
+          transition: width 0.5s ease-in-out !important;
+      }
+
+      /* --- Écrans (Accueil, Question, Résultats) --- */
+      .welcome-screen, .question-screen, .results-screen {
+          text-align: center;
+      }
+
+      .welcome-icon {
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1rem auto;
+          color: var(--primary-500);
+      }
+
+      h1 {
+          font-size: 1.875rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+      }
+
+      h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 2rem;
+      }
+
+      .results-screen h2 {
+          font-size: 1.875rem;
+          margin-bottom: 1rem;
+      }
+
+      .welcome-screen p {
+          color: var(--gray-600);
+          margin-bottom: 2rem;
+      }
+
+      .results-screen .subtitle {
+           color: var(--gray-600);
+           margin-bottom: 2rem;
+      }
+
+      /* --- Boutons --- */
+      button, a.button-like {
+          font-family: 'Inter', sans-serif;
+          font-weight: 700;
+          border-radius: 0.5rem;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          border: none;
+      }
+
+      button:hover, a.button-like:hover {
+           transform: translateY(-2px);
+      }
+
+      .start-quiz-btn, .restart-quiz-btn, .result-link {
+          color: var(--white);
+          padding: 0.75rem 2rem;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .start-quiz-btn:hover, .restart-quiz-btn:hover, .result-link:hover {
+          transform: scale(1.05);
+      }
+
+      .start-quiz-btn, .restart-quiz-btn {
+          background-color: var(--primary-500);
+      }
+
+      .start-quiz-btn:hover, .restart-quiz-btn:hover {
+          background-color: var(--primary-600);
+      }
+
+      .restart-quiz-btn {
+          margin-top: 2rem;
+          padding: 0.5rem 1.5rem;
+      }
+
+      .prev-btn {
+          background-color: var(--gray-300);
+          color: var(--gray-700);
+          padding: 0.5rem 1.5rem;
+      }
+
+      .prev-btn:hover {
+          background-color: var(--gray-400);
+      }
+
+      .nav-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 2rem;
+      }
+
+      /* --- Options du Quiz --- */
+      .options-container {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1rem;
+      }
+
+      .option-icon {
+          margin-right: 0.75rem;
+          font-size: 1.5rem;
+      }
+
+      .option-btn {
+          width: 100%;
+          text-align: left;
+          padding: 1rem;
+          border: 2px solid var(--gray-300);
+          border-radius: 0.5rem;
+          background-color: var(--white);
+          color: var(--gray-800);
+          transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+          display: flex;
+          align-items: center;
+      }
+
+      .option-btn:hover {
+          background-color: #ffebee; /* light-red */
+          border-color: #ff8a80; /* light-red-border */
+          transform: translateY(-2px);
+      }
+
+      .option-btn.selected {
+          background-color: var(--primary-600);
+          color: white;
+          border-color: var(--primary-600);
+      }
+
+      /* --- Écran des Résultats --- */
+      .podium-container {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          width: 100%;
+      }
+
+      .result-card {
+          background-color: #f9fafb; /* gray-50 */
+          border: 2px solid var(--gray-200);
+          border-radius: 0.75rem;
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.5rem;
+          text-align: center; /* Centrer le texte dans la carte */
+          position: relative;
+          overflow: hidden;
+      }
+
+      .rank-badge {
+          position: absolute;
+          top: -1px;
+          right: -1px;
+          background-color: var(--primary-500);
+          color: white;
+          padding: 0.5rem 1rem;
+          font-weight: 700;
+          font-size: 1rem;
+          border-bottom-left-radius: 0.75rem;
+          border-top-right-radius: 0.5rem;
+      }
+
+      .rank-1 .rank-badge { background-color: var(--gold); color: var(--gray-800);}
+      .rank-2 .rank-badge { background-color: var(--silver); color: var(--gray-800);}
+      .rank-3 .rank-badge { background-color: var(--bronze); color: white;}
+
+
+      .result-image {
+          width: 100%;
+          max-width: 200px; /* Limiter la taille de l'image */
+          height: auto;
+          border-radius: 0.5rem;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .result-details {
+          flex: 1;
+          text-align: center;
+      }
+
+      .result-name {
+          font-size: 1.25rem; /* Taille ajustée */
+          font-weight: 700;
+          color: var(--gray-900);
+          margin: 0 0 0.5rem 0;
+      }
+
+      .result-description {
+          color: var(--gray-700);
+          margin-top: 0.5rem;
+          margin-bottom: 1rem;
+          font-size: 0.9rem;
+      }
+
+      .result-features {
+          list-style-type: none; /* Pas de puces */
+          color: var(--gray-600);
+          padding-left: 0;
+          margin-bottom: 1.5rem;
+          font-size: 0.9rem;
+      }
+
+      .result-features li {
+          margin-bottom: 0.25rem;
+      }
+
+      .result-link {
+          display: inline-block;
+          text-decoration: none;
+          background-color: var(--green-500);
+          font-size: 0.9rem;
+          padding: 0.6rem 1.2rem;
+      }
+
+      .result-link:hover {
+          background-color: var(--green-600);
+      }
+
+      /* --- Utilitaires --- */
+      .hidden {
+          display: none;
+      }
+      .fade-out {
+          opacity: 0;
+      }
+
+      /* --- Styles pour écrans larges (Desktop) --- */
+      @media (min-width: 768px) {
+           .quiz-container {
+               padding: 2.5rem;
+           }
+           h1 {
+               font-size: 2.25rem;
+           }
+           .options-container {
+               grid-template-columns: repeat(2, 1fr);
+           }
+           /* Grille pour le podium sur les grands écrans */
+          .podium-container {
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          }
+           .result-card {
+              flex-direction: column;
+              text-align: center;
+           }
+           .result-image {
+              width: 80%;
+              max-width: 220px;
+           }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="quiz-container" class="quiz-container">
+      <!-- Barre de progression -->
+      <div id="progress-bar-container" class="progress-bar-container hidden">
+        <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+      </div>
+
+      <!-- Écran d'accueil -->
+      <div id="welcome-screen" class="welcome-screen">
+        <svg
+          class="welcome-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.572L16.5 21.75l-.398-1.178a3.375 3.375 0 00-2.903-2.903L12 17.25l1.178-.398a3.375 3.375 0 002.903-2.903L16.5 12.75l.398 1.178a3.375 3.375 0 002.903 2.903L21 17.25l-1.178.398a3.375 3.375 0 00-2.903 2.903z" />
+        </svg>
+        <h1>Le 4-Roues Idéal Pour Votre Enfant</h1>
+        <p>
+          Répondez à quelques questions rapides pour trouver le modèle parfait qui fera le bonheur de votre petit pilote
+          !
+        </p>
+        <button id="start-quiz-btn" class="start-quiz-btn">Commencer le Quiz</button>
+      </div>
+
+      <!-- Écran de question (Modèle) -->
+      <div id="question-screen" class="question-screen hidden">
+        <h2 id="question-title"></h2>
+        <div id="options-container" class="options-container">
+          <!-- Les options seront injectées ici -->
+        </div>
+        <div class="nav-buttons">
+          <button id="prev-btn" class="prev-btn">Précédent</button>
+          <!-- Le bouton Suivant est ajouté dynamiquement si nécessaire -->
+        </div>
+      </div>
+
+      <!-- Écran des résultats -->
+      <div id="results-screen" class="results-screen hidden">
+        <h2>Voici notre podium !</h2>
+        <p class="subtitle">
+          D'après vos réponses, voici les 4-roues qui semblent les plus adaptés pour votre aventurier.
+        </p>
+
+        <div id="podium-container" class="podium-container">
+          <!-- Les cartes de résultats seront injectées ici -->
+        </div>
+
+        <button id="restart-quiz-btn" class="restart-quiz-btn">Recommencer le Quiz</button>
+      </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- DONNÉES ---
+        // C'est ici que vous définissez vos questions et les recommandations de produits.
+        // Vous pouvez facilement personnaliser cette section.
+
+        const quizData = [
+             {
+                 question: "🎂 Quel âge a votre enfant ?",
+                 key: 'age',
+                 options: [
+                     { text: "Moins de 4 ans", value: "0-3", icon: "👶" },
+                     { text: "4 à 8 ans", value: "4-8", icon: "🧒" },
+                     { text: "8 à 12 ans", value: "8-12", icon: "🧑" },
+                     { text: "12 ans et plus", value: "12+", icon: "👨‍🚀" }
+                 ],
+                 multiple: false
+             },
+             {
+                 question: "🏞️ Où le 4-roues sera-t-il le plus utilisé ?",
+                 key: 'terrain',
+                 options: [
+                     { text: "Cour ou jardin (terrain plat)", value: "yard", icon: "🏡" },
+                     { text: "Sentiers et chemins de terre", value: "trails", icon: "🌲" },
+                     { text: "Terrains variés (boue, collines)", value: "varied", icon: "⛰️" }
+                 ],
+                 multiple: false
+             },
+            {
+                 question: "✨ Quel look et design souhaitez-vous ?",
+                 key: 'look',
+                 options: [
+                     { text: "Utilitaire (robuste, pratique)", value: "utility", icon: "🛠️" },
+                     { text: "Sport (rapide, racé)", value: "sport", icon: "🏁" },
+                     { text: "Peu importe", value: "any", icon: "🤷" }
+                 ],
+                 multiple: false
+             },
+             { 
+                 question: "💰 Quel est votre budget ?",
+                 key: 'budget',
+                 options: [
+                     { text: "Je veux le meilleur rapport QUALITÉ/PRIX", value: "low", icon: "👍" },
+                     { text: "Je veux le TOP du TOP", value: "high", icon: "💎" }
+                 ],
+                 multiple: false
+             }
+        ];
+
+        const productRecommendations = [
+            //produit par défaut
+            {
+                id: 'Aucun',
+                name: "Aucun modèle trouvé",
+                description: "Nous n'avons pas réussi à déterminer avec précision quel modèle est le plus adapté. N'hésitez pas à nous contacter pour des conseils personnalisés !",
+                link: "https://www.micperformance.com/pages/contact",
+                image: "https://www.micperformance.com/cdn/shop/files/MICperf-rouge_f7df13b5-55af-4f83-aa9a-4cccc46b9566.png?v=1734639269&width=90",
+                features: ["Il est important que les pieds de votre enfant touchent les repose-pieds.","Les 4 roues électriques ne sont pas compatibles avec la boue et l'eau."],
+            },
+            //4 roues électriques
+            {
+                id: 'Minitron',
+                name: "VTT Minitron (eQuad S)",
+                description: "Le point de départ parfait pour les plus jeunes. Facile à utiliser, sécuritaire et tellement amusant pour les premières aventures.",
+                link: "https://www.micperformance.com/products/minitron", 
+                image: "https://www.micperformance.com/cdn/shop/files/minitron-rose.jpg",
+                features: ["36 Volts", "500 Watts", "Design coloré et attrayant", "Télécommande parentale", "Sélecteur 3 vitesses"],
+                match: { age: ['0-3'], budget: ['low'], terrain: ['yard'], look: ['sport','any'] }
+            },
+            {
+                id: 'Manteray',
+                name: "VTT Manteray",
+                description: "Un look sportif et des performances fiables pour s'amuser dans la cour ou sur des sentiers faciles.",
+                link: "https://www.micperformance.com/products/manteray",
+                image: "https://www.micperformance.com/cdn/shop/files/manteray-rouge.jpg",
+                features: ["36 Volts", "500 Watts", "Design coloré et attrayant", "Sélecteur 3 vitesses"],
+                match: { age: ['4-8'], budget: ['low'], terrain: ['yard', 'trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: 'Optimus',
+                name: "2025 VTT Gio Optimus (eQuad X)",
+                description: "Robuste et pratique, ce VTT utilitaire est prêt pour les petites corvées et les grandes explorations.",
+                link: "https://www.micperformance.com/products/optimus",
+                image: "https://www.micperformance.com/cdn/shop/files/optimus-rouge.jpg?v=1744219883",
+                features: ["36 Volts", "800 Watts", "Télécommande parentale", "Sélecteur 3 vitesses"],
+                match: { age: ['4-8'], budget: ['low'], terrain: ['yard', 'trails'], look: ['utility', 'any'] }
+            },
+            {
+                id: 'Tornado',
+                name: "VTT Tornado",
+                description: "Avec plus de puissance, le Tornado offre des sensations fortes et un look qui ne passe pas inaperçu.",
+                link: "https://www.micperformance.com/products/vtt-tornado-800w",
+                image: "https://www.micperformance.com/cdn/shop/files/Tornado_noir.png",
+                features: ["36 Volts", "800 Watts", "Télécommande parentale", "Sélecteur 3 vitesses"],
+                match: { age: ['4-8'], budget: ['high'], terrain: ['yard', 'trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: 'Torpedo',
+                name: "VTT Torpedo",
+                description: "Un excellent compromis entre puissance et polyvalence, idéal pour les jeunes pilotes en pleine croissance.",
+                link: "https://www.micperformance.com/products/vtt-gio-torpedo",
+                image: "https://www.micperformance.com/cdn/shop/files/VTTTORPEDOORANGE.webp?v=1744139774",
+                features: ["48 Volts", "1000 Watts", "Télécommande parentale", "Sélecteur 3 vitesses"],
+                match: { age: ['4-8','8-12'], budget: ['low', 'high'], terrain: ['yard', 'trails'], look: ['utility', 'any'] }
+            },
+            {
+                id: 'Devastator',
+                name: "2025 VTT Gio Devastator (eQuad Q)",
+                description: "Puissance et style sportif se rencontrent pour offrir une expérience de conduite électrique exaltante.",
+                link: "https://www.micperformance.com/products/gio-devastator",
+                image: "https://www.micperformance.com/cdn/shop/files/Devastator-bleu.jpg?v=1744313141",
+                features: ["48 Volts", "1200 Watts", "Télécommande parentale", "Sélecteur 3 vitesses"],
+                match: { age: ['4-8','8-12'], budget: ['low','high'], terrain: ['yard', 'trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: 'Juventus',
+                name: "VTT JUVENTUS",
+                description: "Pour les pré-ados qui veulent de la vitesse et de l'autonomie, le Juventus est un choix sportif et performant.",
+                link: "https://www.micperformance.com/products/vtt-juventus",
+                image: "https://www.micperformance.com/cdn/shop/files/vtt-juventus-vert-_4.jpg?v=1743695199",
+                features: ["60 Volts", "1000 Watts", "Vitesse Max 32km/h"],
+                match: { age: ['12+'], budget: ['low','high'], terrain: ['yard', 'trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: 'Megatronpr',
+                name: "VTT Megatron Premium",
+                description: "Le summum de la puissance électrique utilitaire, pour les jeunes qui n'ont pas froid aux yeux.",
+                link: "https://www.micperformance.com/products/vtt-megatron-premium",
+                image: "https://www.micperformance.com/cdn/shop/files/megatron-premium-noir.jpg",
+                features: ["60 Volts", "1500 Watts", "Vitesse Max 32km/h"],
+                match: { age: ['12+'], budget: ['low','high'], terrain: ['yard', 'trails'], look: ['utility', 'any'] }
+            },
+            // 4 roues essences
+            {
+                id: '110B',
+                name: "VTT 110B",
+                description: "Un premier VTT à essence fiable et abordable, parfait pour s'initier aux joies du tout-terrain.",
+                link: "https://www.micperformance.com/products/vtt-110b",
+                image: "https://www.micperformance.com/cdn/shop/files/VTT-110B-BLEU-SPIDERMAN.jpg?v=1749134017",
+                features: ["Moteur 4 temps, 110 cc", "Automatique", "Télécommande parentale"],
+                match: { age: ['4-8'], budget: ['low'], terrain: ['yard','varied','trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: '110P',
+                name: "VTT 110P",
+                description: "Avec sa marche arrière, ce modèle offre plus de maniabilité pour les jeunes pilotes sur terrains variés.",
+                link: "https://www.micperformance.com/products/gio-110p-2",
+                image: "https://www.micperformance.com/cdn/shop/files/110P-BATMAN.jpg?v=1750341557",
+                features: ["Moteur 4 temps, 110 cc", "Automatique + Reculon", "Télécommande parentale"],
+                match: { age: ['4-8'], budget: ['high'], terrain: ['yard','varied','trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: '110H',
+                name: "VTT 110H",
+                description: "Des suspensions améliorées pour plus de confort et de performance sur les sentiers exigeants.",
+                link: "https://www.micperformance.com/products/110h",
+                image: "https://www.micperformance.com/cdn/shop/files/BLAZER_110H_ROUGE_3.png?v=1743696048",
+                features: ["Moteur 4 temps, 110 cc", "Automatique + Reculon", "Suspensions et Échappement améliorés"],
+                match: { age: ['8-12'], budget: ['low','high'], terrain: ['yard','varied','trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: '125D',
+                name: "VTT 125D",
+                description: "Un VTT utilitaire 125cc abordable, prêt à affronter tous les défis sans se ruiner.",
+                link: "https://www.micperformance.com/products/125d",
+                image: "https://www.micperformance.com/cdn/shop/files/125D-BLEU-SPIDER.jpg?v=1747928578",
+                features: ["Moteur 4 temps, 125 cc", "Automatique + Reculon", "Télécommande parentale"],
+                match: { age: ['8-12', '12+'], budget: ['low'], terrain: ['yard','varied','trails'], look: ['utility', 'any'] }
+            },
+            {
+                id: '125P',
+                name: "VTT 125P",
+                description: "La transmission semi-automatique offre plus de contrôle pour les pilotes expérimentés. Un monstre de travail.",
+                link: "https://www.micperformance.com/products/vtt-blazer-125p",
+                image: "https://www.micperformance.com/cdn/shop/files/125P-bleu.jpg?v=1745587586",
+                features: ["Moteur 4 temps, 125 cc", "SEMI-Automatique + Reculon", "Télécommande parentale"],
+                match: { age: ['12+'], budget: ['high'], terrain: ['yard','varied','trails'], look: ['utility', 'any'] }
+            },
+            {
+                id: '125S',
+                name: "VTT 125S",
+                description: "Le look et les performances d'un VTT sportif avec la puissance fiable d'un moteur 125cc.",
+                link: "https://www.micperformance.com/products/125s",
+                image: "https://www.micperformance.com/cdn/shop/files/vtt-125s-bleu.jpg?v=1743696055",
+                features: ["Moteur 4 temps, 125 cc", "Automatique + Reculon", "Suspensions et Échappement améliorés"],
+                match: { age: ['8-12', '12+'], budget: ['low','high'], terrain: ['yard','varied','trails'], look: ['sport', 'any'] }
+            },
+            {
+                id: '125HS',
+                name: "VTT 125HS PREMIUM",
+                description: "Le meilleur des deux mondes : un VTT premium, performant et polyvalent pour les pilotes exigeants.",
+                link: "https://www.micperformance.com/products/vtt-125hs-premium",
+                image: "https://www.micperformance.com/cdn/shop/files/vtt-125hs-prem-ora-_1.jpg?v=1746473619",
+                features: ["Moteur 4 temps, 125 cc", "Automatique + Reculon", "Suspensions et Échappement améliorés"],
+                match: { age: ['12+'], budget: ['high'], terrain: ['yard','varied','trails'], look: ['any', 'utility'] }
+            },
+        ];
+
+        // --- LOGIQUE DU QUIZ ---
+
+        const startBtn = document.getElementById('start-quiz-btn');
+        const restartBtn = document.getElementById('restart-quiz-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        
+        const questionTitle = document.getElementById('question-title');
+        const optionsContainer = document.getElementById('options-container');
+        const podiumContainer = document.getElementById('podium-container');
+        
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBar = document.getElementById('progress-bar');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            welcomeScreen.classList.add('fade-out');
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                welcomeScreen.classList.remove('fade-out');
+                questionScreen.classList.remove('hidden');
+                progressBarContainer.classList.remove('hidden');
+                displayQuestion();
+            }, 300);
+        }
+
+        function displayQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            
+            // Mettre à jour la barre de progression
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.setProperty('width', `${progress}%`, 'important');
+
+            questionTitle.textContent = questionData.question;
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerHTML = `<span class="option-icon">${option.icon}</span><span>${option.text}</span>`;
+                button.dataset.value = option.value;
+                button.className = 'option-btn';
+                
+                // Vérifier si cette option a été précédemment sélectionnée
+                if (userAnswers[questionData.key] === option.value) {
+                    button.classList.add('selected');
+                }
+
+                button.onclick = () => selectOption(option.value, questionData.key);
+                optionsContainer.appendChild(button);
+            });
+
+            prevBtn.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+        }
+
+        function selectOption(value, key) {
+            userAnswers[key] = value;
+            
+            // Mettre à jour les styles des boutons
+            document.querySelectorAll('#options-container .option-btn').forEach(btn => {
+                if (btn.dataset.value === value) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+
+            // Passer automatiquement à la question suivante après un court délai
+            setTimeout(() => {
+                if (currentQuestionIndex < quizData.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            }, 300);
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function showResults() {
+            // Mettre à jour la barre de progression à 100%
+            progressBar.style.setProperty('width', '100%', 'important');
+
+            questionScreen.classList.add('fade-out');
+            setTimeout(() => {
+                questionScreen.classList.add('hidden');
+                questionScreen.classList.remove('fade-out');
+                resultsScreen.classList.remove('hidden');
+                
+                const podium = calculatePodium();
+                displayPodium(podium);
+            }, 300);
+        }
+
+        function calculatePodium() {
+            let scores = {};
+            // Initialiser les scores pour tous les produits sauf le produit par défaut 'Aucun'
+            productRecommendations.filter(p => p.id !== 'Aucun').forEach(prod => scores[prod.id] = 0);
+
+            // Calculer les scores
+            productRecommendations.forEach(product => {
+                if (product.match) {
+                    if (product.match.age.includes(userAnswers.age)) scores[product.id] += 5;
+                    if (product.match.budget.includes(userAnswers.budget)) scores[product.id] += 2;
+                    if (product.match.terrain.includes(userAnswers.terrain)) scores[product.id] += 5;
+                    if (product.match.look.includes(userAnswers.look)) scores[product.id] += 1;
+                }
+            });
+
+            // Filtrer les produits avec un score minimum, puis trier
+            const sortedIds = Object.keys(scores)
+                .filter(id => scores[id] >= 10) // Seuil de score pour être considéré
+                .sort((a, b) => scores[b] - scores[a]);
+
+            // S'il n'y a pas de correspondance, retourner le produit par défaut
+            if (sortedIds.length === 0) {
+                return [productRecommendations.find(p => p.id === 'Aucun')];
+            }
+
+            // Retourner les 3 meilleurs produits (ou moins s'il y en a moins)
+            return sortedIds.slice(0, 3).map(id => productRecommendations.find(p => p.id === id));
+        }
+
+        function displayPodium(products) {
+            podiumContainer.innerHTML = ''; // Vider les anciens résultats
+            const rankText = ["🥇 1er", "🥈 2e", "🥉 3e"];
+
+            products.forEach((product, index) => {
+                const isDefault = product.id === 'Aucun';
+                const card = document.createElement('div');
+                card.className = `result-card ${!isDefault ? `rank-${index + 1}` : ''}`;
+
+                const featuresHtml = product.features.map(f => `<li>${f}</li>`).join('');
+                
+                const baseUrl = product.link;
+                const utmParams = `utm_source=quiz-vehicule&utm_medium=quiz&utm_campaign=recommandation-produit&utm_content=resultat-${product.id}`;
+                const finalUrl = baseUrl.includes('?') ? `${baseUrl}&${utmParams}` : `${baseUrl}?${utmParams}`;
+
+                card.innerHTML = `
+                    ${!isDefault ? `<div class="rank-badge">${rankText[index]}</div>` : ''}
+                    <img src="${product.image}" alt="Image de ${product.name}" class="result-image">
+                    <div class="result-details">
+                        <h3 class="result-name">${product.name}</h3>
+                        <p class="result-description">${product.description}</p>
+                        <ul class="result-features">
+                            ${featuresHtml}
+                        </ul>
+                        <a href="${finalUrl}" target="_blank" class="result-link button-like">
+                            Voir le produit
+                        </a>
+                    </div>
+                `;
+                podiumContainer.appendChild(card);
+            });
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            progressBarContainer.classList.add('hidden');
+            progressBar.style.setProperty('width', '0%', 'important');
+            welcomeScreen.classList.remove('hidden');
+        }
+
+        // --- ÉCOUTEURS D'ÉVÉNEMENTS ---
+        startBtn.addEventListener('click', startQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+        prevBtn.addEventListener('click', prevQuestion);
+
+    });
+    </script>
+  </body>
+</html>

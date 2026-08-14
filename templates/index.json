@@ -1,1 +1,46 @@
-{"sections":{"featured_collection":{"type":"featured-collection","custom_css":[],"settings":{"collection":"en-vedette-chez-micperformance","products_to_show":12,"title":"Produits vedettes","heading_size":"h2","description":"","show_description":true,"description_style":"body","columns_desktop":6,"enable_desktop_slider":false,"full_width":false,"show_view_all":true,"view_all_style":"solid","color_scheme":"scheme-a1e9262a-421a-45ab-8764-7f9e2166e6b4","image_ratio":"square","image_shape":"default","show_secondary_image":true,"show_vendor":true,"show_rating":false,"quick_add":"none","columns_mobile":"2","swipe_on_mobile":false,"padding_top":0,"padding_bottom":100}},"rich_text_jMaNR6":{"type":"rich-text","blocks":{"heading_eR7Dp6":{"type":"heading","settings":{"heading":"Mic Performance","heading_size":"h2"}},"text_97pWD6":{"type":"text","settings":{"text":"<p><br\/><br\/>« On se rappelle tous de notre premier bolide. En choisissant Mic Performance, vous êtes sûr de faire le bon choix. Forts de plus de 10 ans d'expérience, nous avons sélectionné les meilleurs VTT pour enfants, les meilleures motocross (y compris des modèles 250cc pour adultes) qu'ils soient à essence ou électriques. Mic Performance est l'endroit qu'il vous faut ! »<br\/><br\/><br\/><br\/><\/p>"}}},"block_order":["heading_eR7Dp6","text_97pWD6"],"settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":40,"padding_bottom":52}}},"order":["featured_collection","rich_text_jMaNR6"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_jMaNR6": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_eR7Dp6": {
+          "type": "heading",
+          "settings": {
+            "heading": "Mic Performance",
+            "heading_size": "h2"
+          }
+        },
+        "text_97pWD6": {
+          "type": "text",
+          "settings": {
+            "text": "<p><br/><br/>« On se rappelle tous de notre premier bolide. En choisissant Mic Performance, vous êtes sûr de faire le bon choix. Forts de plus de 10 ans d'expérience, nous avons sélectionné les meilleurs VTT pour enfants, les meilleures motocross (y compris des modèles 250cc pour adultes) qu'ils soient à essence ou électriques. Mic Performance est l'endroit qu'il vous faut ! »<br/><br/><br/><br/></p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_eR7Dp6",
+        "text_97pWD6"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "rich_text_jMaNR6"
+  ]
+}
